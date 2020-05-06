@@ -1,3 +1,4 @@
+
 class HashTableEntry:
     """
     Hash Table entry, as a linked list node.
@@ -13,24 +14,22 @@ class HashTable:
     """
     A hash table that with `capacity` buckets
     that accepts string keys
-
     Implement this.
     """
     def __init__(self, capacity):
         self.capacity = capacity
         self.storage = [None] * capacity
+        self.head = None
 
     def fnv1(self, key):
         """
         FNV-1 64-bit hash function
-
         Implement this, and/or DJB2.
         """        
 
     def djb2(self, key):
         """
         DJB2 32-bit hash function
-
         Implement this, and/or FNV-1.
         """
 
@@ -50,41 +49,68 @@ class HashTable:
     def put(self, key, value):
         """
         Store the value with the given key.
-
         Hash collisions should be handled with Linked List Chaining.
-
         Implement this.
         """
         index = self.hash_index(key)
-        self.storage[index] = value
+
+        cur_entry = self.storage[index]
+
+        new_entry = HashTableEntry(key, value)
+
+        # if the index is None, overwite with new_entry
+        if cur_entry is None:
+            self.storage[index] = new_entry
+        # if the index is taken but shares a key, overwrite value
+        elif cur_entry.key == key:
+            cur_entry.value = value
+        else: # else loop through storage comparing the current entry's next key
+            while cur_entry.next is not None:
+                # next values must also be updated
+                if cur_entry.next.key == key:
+                    cur_entry.next.value = value
+                # move on to the next entry
+                cur_entry = cur_entry.next
+            # if we don't find anything, tack it on the end
+            cur_entry.next = HashTableEntry(key, value)
 
     def delete(self, key):
         """
         Remove the value stored with the given key.
-
         Print a warning if the key is not found.
-
         Implement this.
         """
         index = self.hash_index(key)
+        if not index:
+            print(f"No key found")
         self.storage[index] = None
 
     def get(self, key):
         """
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
         Implement this.
         """
         index = self.hash_index(key)
-        return self.storage[index]
+        cur_entry = self.storage[index]
 
+        if cur_entry is not None:
+            # loop through the hash table's entry keys
+            while cur_entry.key != key:
+                # if we find the key return the value
+                if cur_entry.key == key:
+                    return cur_entry.value
+                else:
+                    # move on to the next entry
+                    cur_entry = cur_entry.next
+            return cur_entry.value
+        
+    
+        
     def resize(self):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
-
         Implement this.
         """
 

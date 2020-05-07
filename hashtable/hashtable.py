@@ -97,7 +97,10 @@ class HashTable:
             self.entry_count += 1
         # if we hit the load factor with the last addition, double size.
         if self.entry_count / self.capacity >= 0.7:
-            self.resize()    
+            self.resize()
+    
+
+
 
 
     def delete(self, key):
@@ -112,6 +115,9 @@ class HashTable:
         else:
             self.entry_count -= 1
         self.storage[index] = None
+
+        if self.entry_count / self.capacity <= 0.2:
+            self.resize()
 
     def get(self, key):
         """
@@ -129,17 +135,19 @@ class HashTable:
         
     
         
-    def resize(self, capacity=None):
+    def resize(self, spec_capacity=None):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
         Implement this.
         """
         prev_storage = self.storage
-
-        if capacity is not None:
-            self.capacity = capacity
-        else:
+        print(f"resizing")
+        if spec_capacity is not None:
+            self.capacity = spec_capacity
+        elif self.capacity / 2 >= 8 and self.entry_count / self.capacity <= 0.2:
+            self.capacity = self.capacity // 2
+        elif self.entry_count / self.capacity >= 0.7:
             self.capacity = self.capacity * 2
         self.storage = [None] * self.capacity
         self.entry_count = 0

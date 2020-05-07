@@ -122,6 +122,9 @@ class TestHashTable(unittest.TestCase):
         return_value = ht.get("key-9")
         self.assertTrue(return_value == "val-9")
 
+        # --> TEST RESIZE SMALLER <--
+        self.assertTrue(len(ht.storage) == 16)
+
         ht.delete("key-9")
         ht.delete("key-8")
         ht.delete("key-7")
@@ -130,6 +133,10 @@ class TestHashTable(unittest.TestCase):
         ht.delete("key-4")
         ht.delete("key-3")
         ht.delete("key-2")
+
+        # --> TEST RESIZE SMALLER <--
+        self.assertTrue(len(ht.storage) == 8)
+
         ht.delete("key-1")
         ht.delete("key-0")
 

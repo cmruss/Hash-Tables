@@ -85,23 +85,22 @@ class HashTable:
             # if the index is taken but shares a key, overwrite value
         elif cur_entry.key == key:
             cur_entry.value = value
-        else: # if we haven't specified a next this will be the first open next
-            while cur_entry.next is not None:
-                # for updating the next value in the linked list
-                if cur_entry.next.key == key:
-                    cur_entry.next.value = value
-                # move on to the next entry
-                cur_entry = cur_entry.next
-            # if we find an open next, tack it on as the next value
-            cur_entry.next = HashTableEntry(key, value)
-            self.entry_count += 1
+
+        # --> LINKED LIST IMPLEMENTATION <--
+        # else: # if we haven't specified a next this will be the first open next
+        #     while cur_entry.next is not None:
+        #         # for updating the next value in the linked list
+        #         if cur_entry.next.key == key:
+        #             cur_entry.next.value = value
+        #         # move on to the next entry
+        #         cur_entry = cur_entry.next
+        #     # if we find an open next, tack it on as the next value
+        #     cur_entry.next = HashTableEntry(key, value)
         # if we hit the load factor with the last addition, double size.
+
+        # resize implementation
         if self.entry_count / self.capacity >= 0.7:
             self.resize()
-    
-
-
-
 
     def delete(self, key):
         """
@@ -115,7 +114,8 @@ class HashTable:
         else:
             self.entry_count -= 1
         self.storage[index] = None
-
+        # if the load factor is enough reduced with our deletion
+        # call resize to halve the size
         if self.entry_count / self.capacity <= 0.2:
             self.resize()
 
@@ -133,24 +133,33 @@ class HashTable:
         else:
             return None
         
-    
-        
-    def resize(self, spec_capacity=None):
+    def resize(self, capacity=None):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
         Implement this.
         """
         prev_storage = self.storage
-        print(f"resizing")
-        if spec_capacity is not None:
-            self.capacity = spec_capacity
+        # if the capacity is specified 
+        # use that arg, unless less than 8
+        if capacity is not None and capacity >= 8:
+            self.capacity = capacity
+        # if the proposed downsized capacity is not less than or equal to 8
+        # and the load factor is equal to or less than 0.2
+        # halve the capacity to a round number
         elif self.capacity / 2 >= 8 and self.entry_count / self.capacity <= 0.2:
             self.capacity = self.capacity // 2
+        # if however the load factor is greater than 0.7
+        # double the capacity
         elif self.entry_count / self.capacity >= 0.7:
             self.capacity = self.capacity * 2
+        else: # if we meet none of our conditions, start with 8
+            self.capacity = 8
+        # create new storage
         self.storage = [None] * self.capacity
+        # then reset the entry count
         self.entry_count = 0
+        # add each entry that does not equal None
         for entry in prev_storage:
             if entry is not None:
                 self.put(entry.key, entry.value)

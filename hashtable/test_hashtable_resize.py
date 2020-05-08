@@ -32,7 +32,6 @@ class TestHashTable(unittest.TestCase):
         return_value = ht.get("key-5")
         self.assertTrue(return_value == "val-5")
         return_value = ht.get("key-6")
-        print(f"should be 6 {return_value}")
         self.assertTrue(return_value == "val-6")
         return_value = ht.get("key-7")
         self.assertTrue(return_value == "val-7")

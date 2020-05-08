@@ -85,20 +85,16 @@ class HashTable:
             # if the index is taken but shares a key, overwrite value
         elif cur_entry.key == key:
             cur_entry.value = value
-
-        # --> LINKED LIST IMPLEMENTATION <--
-        # else: # if we haven't specified a next this will be the first open next
-        #     while cur_entry.next is not None:
-        #         # for updating the next value in the linked list
-        #         if cur_entry.next.key == key:
-        #             cur_entry.next.value = value
-        #         # move on to the next entry
-        #         cur_entry = cur_entry.next
-        #     # if we find an open next, tack it on as the next value
-        #     cur_entry.next = HashTableEntry(key, value)
+        else: # if we haven't specified a next this will be the first open next
+            while cur_entry.next is not None:
+                # for updating the next value in the linked list
+                if cur_entry.next.key == key:
+                    cur_entry.next.value = value
+                # move on to the next entry
+                cur_entry = cur_entry.next
+            # if we find an open next, tack it on as the next value
+            cur_entry.next = HashTableEntry(key, value)
         # if we hit the load factor with the last addition, double size.
-
-        # resize implementation
         if self.entry_count / self.capacity >= 0.7:
             self.resize()
 

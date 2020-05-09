@@ -1,4 +1,6 @@
 # Implement me.
+with open("robin.txt") as robin:
+    robin = robin.read()
 def histo(s):
     if len(s) < 1:
         return {}
@@ -17,7 +19,7 @@ def histo(s):
                 cache[word] = 1
         # turning a dict to a list to sort it
         words = list(cache.items()) 
-        # sorting it
+        # sorting it???
         words.sort(key=(lambda e: (-e[-1], e[0])))
         for word, occ in words:
             # print the key and visualize the value 
@@ -27,6 +29,5 @@ def histo(s):
 
 if __name__ == "__main__":
     print(histo(""))
-    print(histo("Hello"))
-    print(histo('Hello, my cat. And my cat doesn\'t say "hello" back.'))
-    print(histo('This is a test of the emergency broadcast network. This is only a test.'))
+    print(histo(f"{robin}"))
+  

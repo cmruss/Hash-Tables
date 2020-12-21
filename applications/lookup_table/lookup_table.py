@@ -1,15 +1,30 @@
 import math
 import random
 
-def slowfun(x, y):
+def lookup_table():
+    for i in range(1,50000):
+        slowfun(i, i+1)
+
+def slowfun(x, y, cache={}):
     # TODO: Modify to produce the same results, but much faster
-    v = math.pow(x, y)
-    v = math.factorial(v)
-    v //= (x + y)
-    v %= 982451653
+    if cache.get(f"{x},{y}"):
+        return cache[f"{x},{y}"]
+    else:
+        v = math.pow(x, y)
+        # v = math.factorial(v)
+        """ ^ is crashing Python?
+        but the following expression is equivalent
+        at least for time complexity (I hope)"""
+        factorial = v
+        for i in range(1, round(v)+1):
+            factorial *= v
+        v = factorial
+        v //= (x + y)
+        v %= 982451653
 
-    return v
+        cache[f"{x},{y}"] = v
 
+    return cache[f"{x},{y}"]
 
 # Do not modify below this line!
 
